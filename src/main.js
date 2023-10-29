@@ -449,20 +449,18 @@ function MainController($scope, $http, $window) {
 		return undefined;
 	};
 
-	$scope.saveAdCreative = function (ad) {
-		$http
-			.post("/service/free/adPreviewTool/saveNewAdCreative", ad)
-			.success(function (data, status, headers, config) {
-				if (data == "ERROR") {
-					$scope.errorSavingAd =
-						"Error occured while saving your ad creative. Please contact support@karooya.com";
-				} else {
-					$scope.urlToShare = data;
-				}
-			})
-			.error(function (data, status, headers, config) {
-				$scope.errorSavingAd =
-					"Error occured while saving your ad creative. Please contact support@karooya.com";
-			});
-	};
+	// $scope.saveAdCreative = function (ad) {
+	// 	$http
+	// 		.post("/service/free/adPreviewTool/saveNewAdCreative", ad)
+	// 		.success(function (data, status, headers, config) {
+	// 			if (data == "ERROR") {
+	// 				$scope.errorSavingAd = "Error occured while saving your ad creative.";
+	// 			} else {
+	// 				$scope.urlToShare = data;
+	// 			}
+	// 		})
+	// 		.error(function (data, status, headers, config) {
+	// 			$scope.errorSavingAd = "Error occured while saving your ad creative.";
+	// 		});
+	// };
 }

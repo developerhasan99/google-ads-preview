@@ -6,7 +6,7 @@
 
 		<title>Responsive Search Ad Preview Tool</title>
 
-		<link rel="shortcut icon" type="image/x-icon" href="/public/vite.svg" />
+		<link rel="shortcut icon" type="image/x-icon" href="/vite.svg" />
 
 		<!-- Bootstrap core CSS -->
 		<link
@@ -29,7 +29,7 @@
 					<div class="col-xs-12 col-sm-6">
 						<!-- Final URL: Start -->
 						<div class="input-group mb-3">
-							<div class="input-group-text" style="width: 7em">Final URL</div>
+							<div class="input-group-text">Final URL</div>
 							<input
 								id="finalurl"
 								class="form-control input"
@@ -57,7 +57,7 @@
 												<div dnd-handle class="dnd-handle input-group-text">
 													:::
 												</div>
-												<div class="input-group-text" style="width: 7em">
+												<div class="input-group-text">
 													Headline {{$index+1}}
 												</div>
 												<input
@@ -92,10 +92,8 @@
 
 						<!-- Path: Start -->
 						<div class="input-group mb-3">
-							<div class="input-group-text" style="width: 7em">Path</div>
-							<div class="input-group-text" style="width: 7em">
-								{{getDomainName(ad)}}/
-							</div>
+							<div class="input-group-text">Path</div>
+							<div class="input-group-text">{{getDomainName(ad)}}/</div>
 							<input
 								id="path1"
 								class="form-control input"
@@ -132,7 +130,7 @@
 												<div dnd-handle class="dnd-handle input-group-text">
 													:::
 												</div>
-												<div class="input-group-text" style="width: 7em">
+												<div class="input-group-text">
 													Description {{$index+1}}
 												</div>
 												<textarea
@@ -165,8 +163,8 @@
 							</div>
 						</div>
 						<!-- Description: End -->
-
-						<div class="card">
+						<!-- Additional services: Start -->
+						<div class="card mb-3">
 							<div class="card-body">
 								<h3 class="h5">Extra Features</h3>
 								<div class="row">
@@ -208,12 +206,7 @@
 													<div class="col-xs-12">
 														<div class="row">
 															<div class="input-group col-xs-12">
-																<div
-																	class="input-group-text"
-																	style="width: 7em"
-																>
-																	Sitelink 1
-																</div>
+																<div class="input-group-text">Sitelink 1</div>
 																<input
 																	id="sitelink1"
 																	class="form-control input"
@@ -230,17 +223,14 @@
 															</div>
 														</div>
 														<div
-															class="row"
+															class="row ps-3"
 															ng-if="ad.features.showSitelinkDescription"
 														>
 															<div class="col-xs-1"></div>
 															<div class="col-xs-11">
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 1
 																		</div>
 																		<input
@@ -260,10 +250,7 @@
 																</div>
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 2
 																		</div>
 																		<input
@@ -290,12 +277,7 @@
 													<div class="col-xs-12">
 														<div class="row">
 															<div class="input-group col-xs-12">
-																<div
-																	class="input-group-text"
-																	style="width: 7em"
-																>
-																	Sitelink 2
-																</div>
+																<div class="input-group-text">Sitelink 2</div>
 																<input
 																	id="sitelink2"
 																	class="form-control input"
@@ -312,17 +294,14 @@
 															</div>
 														</div>
 														<div
-															class="row"
+															class="row ps-3"
 															ng-if="ad.features.showSitelinkDescription"
 														>
 															<div class="col-xs-1"></div>
 															<div class="col-xs-11">
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 1
 																		</div>
 																		<input
@@ -342,10 +321,7 @@
 																</div>
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 2
 																		</div>
 																		<input
@@ -372,12 +348,7 @@
 													<div class="col-xs-12">
 														<div class="row">
 															<div class="input-group col-xs-12">
-																<div
-																	class="input-group-text"
-																	style="width: 7em"
-																>
-																	Sitelink 3
-																</div>
+																<div class="input-group-text">Sitelink 3</div>
 																<input
 																	id="sitelink3"
 																	class="form-control input"
@@ -394,17 +365,14 @@
 															</div>
 														</div>
 														<div
-															class="row"
+															class="row ps-3"
 															ng-if="ad.features.showSitelinkDescription"
 														>
 															<div class="col-xs-1"></div>
 															<div class="col-xs-11">
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 1
 																		</div>
 																		<input
@@ -424,10 +392,7 @@
 																</div>
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 2
 																		</div>
 																		<input
@@ -454,12 +419,7 @@
 													<div class="col-xs-12">
 														<div class="row">
 															<div class="input-group col-xs-12">
-																<div
-																	class="input-group-text"
-																	style="width: 7em"
-																>
-																	Sitelink 4
-																</div>
+																<div class="input-group-text">Sitelink 4</div>
 																<input
 																	id="sitelink4"
 																	class="form-control input"
@@ -476,17 +436,14 @@
 															</div>
 														</div>
 														<div
-															class="row"
+															class="row ps-3"
 															ng-if="ad.features.showSitelinkDescription"
 														>
 															<div class="col-xs-1"></div>
 															<div class="col-xs-11">
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 1
 																		</div>
 																		<input
@@ -506,10 +463,7 @@
 																</div>
 																<div class="row" style="margin-top: 5px">
 																	<div class="input-group col-xs-12">
-																		<div
-																			class="input-group-text"
-																			style="width: 7em"
-																		>
+																		<div class="input-group-text">
 																			Description 2
 																		</div>
 																		<input
@@ -536,10 +490,11 @@
 
 										<div class="row">
 											<div class="col-xs-12">
-												<div class="checkbox" style="margin-bottom: 0px">
+												<div class="form-check" style="margin-bottom: 0px">
 													<label>
 														<input
 															type="checkbox"
+															class="form-check-input"
 															ng-model="ad.features.showCalloutExt"
 														/>Add Callout Extensions
 													</label>
@@ -552,12 +507,10 @@
 											ng-if="ad.features.showCalloutExt"
 										>
 											<div class="col-xs-1"></div>
-											<div class="col-xs-10">
+											<div class="col-xs-10 mb-3">
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Callout 1
-														</div>
+														<div class="input-group-text">Callout 1</div>
 														<input
 															id="callout1"
 															class="form-control input"
@@ -574,9 +527,7 @@
 												</div>
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Callout 2
-														</div>
+														<div class="input-group-text">Callout 2</div>
 														<input
 															id="callout2"
 															class="form-control input"
@@ -593,9 +544,7 @@
 												</div>
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Callout 3
-														</div>
+														<div class="input-group-text">Callout 3</div>
 														<input
 															id="callout3"
 															class="form-control input"
@@ -612,9 +561,7 @@
 												</div>
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Callout 4
-														</div>
+														<div class="input-group-text">Callout 4</div>
 														<input
 															id="callout4"
 															class="form-control input"
@@ -634,10 +581,11 @@
 
 										<div class="row">
 											<div class="col-xs-12">
-												<div class="checkbox" style="margin-bottom: 0px">
+												<div class="form-check" style="margin-bottom: 0px">
 													<label>
 														<input
 															type="checkbox"
+															class="form-check-input"
 															ng-model="ad.features.showCallExt"
 														/>Add Call Extension
 													</label>
@@ -650,12 +598,10 @@
 											ng-if="ad.features.showCallExt"
 										>
 											<div class="col-xs-1"></div>
-											<div class="col-xs-10">
+											<div class="col-xs-10 mb-3">
 												<div class="row">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Phone Number
-														</div>
+														<div class="input-group-text">Phone Number</div>
 														<input
 															id="phonenumber"
 															class="form-control input"
@@ -675,10 +621,11 @@
 
 										<div class="row">
 											<div class="col-xs-12">
-												<div class="checkbox" style="margin-bottom: 0px">
+												<div class="form-check" style="margin-bottom: 0px">
 													<label>
 														<input
 															type="checkbox"
+															class="form-check-input"
 															ng-model="ad.features.showLocationExt"
 														/>Add Location Extensions
 													</label>
@@ -696,12 +643,7 @@
 													<div class="col-xs-11">
 														<div class="row">
 															<div class="input-group col-xs-12">
-																<div
-																	class="input-group-text"
-																	style="width: 7em"
-																>
-																	Address
-																</div>
+																<div class="input-group-text">Address</div>
 																<input
 																	id="address"
 																	class="form-control input"
@@ -726,10 +668,11 @@
 
 										<div class="row">
 											<div class="col-xs-12">
-												<div class="checkbox" style="margin-bottom: 0px">
+												<div class="form-check" style="margin-bottom: 0px">
 													<label>
 														<input
 															type="checkbox"
+															class="form-check-input"
 															ng-model="ad.features.showRating"
 														/>Show Advertiser Rating
 													</label>
@@ -739,10 +682,11 @@
 
 										<div class="row">
 											<div class="col-xs-12">
-												<div class="checkbox" style="margin-bottom: 0px">
+												<div class="form-check" style="margin-bottom: 0px">
 													<label>
 														<input
 															type="checkbox"
+															class="form-check-input"
 															ng-model="ad.features.showStructuredSnippetsExt"
 														/>Add Structured Snippets Extension
 													</label>
@@ -755,7 +699,7 @@
 											ng-if="ad.features.showStructuredSnippetsExt"
 										>
 											<div class="col-xs-1"></div>
-											<div class="col-xs-10">
+											<div class="col-xs-10 mb-3">
 												<div class="form-group row" style="margin: 0">
 													<strong
 														class="col-xs-2 control-label"
@@ -781,9 +725,7 @@
 												<!-- form-group -->
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Value 1
-														</div>
+														<div class="input-group-text">Value 1</div>
 														<input
 															id="ssValue1"
 															class="form-control input"
@@ -800,9 +742,7 @@
 												</div>
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Value 2
-														</div>
+														<div class="input-group-text">Value 2</div>
 														<input
 															id="ssValue2"
 															class="form-control input"
@@ -819,9 +759,7 @@
 												</div>
 												<div class="row" style="margin-top: 5px">
 													<div class="input-group col-xs-12">
-														<div class="input-group-text" style="width: 7em">
-															Value 3
-														</div>
+														<div class="input-group-text">Value 3</div>
 														<input
 															id="ssValue3"
 															class="form-control input"
@@ -841,10 +779,14 @@
 
 										<div class="row">
 											<div class="col-xs-12">
-												<div class="checkbox" style="margin-bottom: 0px">
+												<div
+													class="checkbox form-check"
+													style="margin-bottom: 0px"
+												>
 													<label>
 														<input
 															type="checkbox"
+															class="form-check-input"
 															ng-model="ad.features.showPriceExt"
 														/>Add Price Extension
 													</label>
@@ -858,7 +800,7 @@
 										>
 											<div class="col-xs-1"></div>
 											<div class="col-xs-10">
-												<div class="form-group row" style="margin: 0">
+												<div class="form-group row mb-2" style="margin: 0">
 													<strong
 														class="col-xs-3 control-label"
 														for="priceExtCurrency"
@@ -1045,15 +987,9 @@
 
 										<div class="row" style="margin-top: 25px">
 											<div class="col-xs-2">
-												<button
-													type="button"
-													class="btn btn-warning pull-left"
-													ng-click="clearAd()"
-												>
-													&nbsp;Reset&nbsp;
-												</button>
+												<!-- Reset Button here -->
 											</div>
-											<div class="col-xs-10">
+											<!-- <div class="col-xs-10">
 												<button
 													type="button"
 													class="btn btn-success pull-left"
@@ -1061,9 +997,9 @@
 												>
 													&nbsp;Share This Ad&nbsp;
 												</button>
-											</div>
+											</div> -->
 										</div>
-										<div class="row" ng-if="urlToShare">
+										<!-- <div class="row" ng-if="urlToShare">
 											<div
 												class="col-xs-12 alert-success"
 												style="margin-top: 15px; padding: 10px 20px 20px 20px"
@@ -1083,7 +1019,7 @@
 													</div>
 												</div>
 											</div>
-										</div>
+										</div> -->
 										<div class="row" ng-if="errorSavingAd">
 											<div
 												class="col-xs-12 alert-warning"
@@ -1096,6 +1032,14 @@
 								</div>
 							</div>
 						</div>
+						<!-- Additional services: End -->
+						<button
+							type="button"
+							class="btn btn-warning pull-left reset-btn"
+							ng-click="clearAd()"
+						>
+							&nbsp;Reset&nbsp;
+						</button>
 					</div>
 
 					<div class="col-xs-12 col-sm-6">
@@ -1324,7 +1268,7 @@
 									<div class="col-sm-12">
 										<div
 											class="mobile-preview-frame"
-											style="background-color: #efefef"
+											style="background-color: #efefef; margin: auto"
 										>
 											<div
 												class="row"
@@ -1391,12 +1335,12 @@
 																		>{{getCompleteDisplayURL(ad)}}</span
 																	>
 																</div>
-																<div class="col-xs-2">
+																<!-- <div class="col-xs-2">
 																	<i
 																		style="color: bbb; padding: 0px 5px 0px 5px"
 																		class="fa fa-info-circle"
 																	></i>
-																</div>
+																</div> -->
 															</div>
 														</div>
 														<div>
@@ -1459,11 +1403,6 @@
 																>{{getStructuredSnippetLine(ad)}}</span
 															>
 														</div>
-														<!--
-                        <div ng-if="ad.features.showReviewExt && getReviewExtLength(ad) > 0" class="review-ext" ng-class="{'review-ext-type-exact-quote':ad.reviewExtFormat==='ExactQuote'}">
-                          <span ng-if="ad.reviewText" class="review-ext-text">{{ad.reviewText}}</span><span ng-if="ad.reviewText && ad.reviewSource"> &ndash; </span><span ng-if="ad.reviewSource" class="review-ext-source">{{ad.reviewSource}}</span>
-                        </div>
-                        -->
 														<div
 															ng-if="ad.features.showSitelinkExt && hasSitelinks(ad)"
 															class="sitelink-ext-container-mobile mobile"
@@ -1538,25 +1477,8 @@
 															<span class="mobile-call-ext"
 																>Call {{ad.phone}}</span
 															>
-
-															<!-- <div class="row">
-                            <div class="col-xs-6">
-                              <i style="font-size: large; padding:0px 5px 0px 5px;" class="fa fa-phone"></i> <span class="mobile-call-ext">Call</span>
-                            </div>
-                            <div class="col-xs-6" style="border-left: 1px solid #cccccc;">
-                              <div class="pull-left" style="width: 20px; margin-right: 8px;">
-                                <img src="/images/missed-call-icon-black.png" class="img-responsive">
-                              </div>
-                              <span class="mobile-call-ext">Missed Call</span>
-                            </div>
-                          </div> -->
 														</div>
-														<!-- 
-                        <div ng-if="ad.features.showMessageExt && ad.messageExtText">
-                          <hr style=" margin-bottom: 7px; margin-top: 7px; margin-left:-10px; margin-right:-10px;"/>
-                          <i style="font-size: large; padding:0px 5px 0px 5px;" class="fa fa-comment-o"></i> <span class="mobile-call-ext">{{ad.messageExtText}}</span>
-                        </div>
- -->
+
 														<div
 															ng-if="ad.features.showLocationExt && hasNonEmptyAddresses(ad)"
 														>
