@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Responsive Search Ad Preview Tool</title>
+
+		<link rel="shortcut icon" type="image/x-icon" href="/public/vite.svg" />
+
+		<!-- Bootstrap core CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+			integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="/src/style.css" />
+	</head>
+
+	<body>
+		<section class="py-5" ng-app="adPreviewToolApp">
+			<div class="container">
+				<div
+					ng-controller="MainController"
+					class="row content-section-b ng-cloak remove-left-right-margin"
+					id="ad-preview-tool"
+				>
+					<div class="col-xs-12 col-sm-6">
+						<!-- Final URL: Start -->
+						<div class="input-group mb-3">
+							<div class="input-group-text" style="width: 7em">Final URL</div>
+							<input
+								id="finalurl"
+								class="form-control input"
+								type="text"
+								ng-model="ad.finalurl"
+							/>
+						</div>
+						<!-- Final URL: End -->
+
+						<!-- Headings: Start -->
+						<div class="card mb-3">
+							<div class="card-body">
+								<h3 class="h5">Headlines</h3>
+								<div dnd-list="ad.headlines.headlineArr" class="col-xs-12">
+									<div
+										class="row"
+										ng-repeat="headline in ad.headlines.headlineArr"
+										dnd-draggable="headline"
+										dnd-effect-allowed="move"
+										dnd-moved="ad.headlines.headlineArr.splice($index, 1)"
+										style="margin-top: 5px"
+									>
+										<div dnd-nodrag class="col-xs-11">
+											<div class="input-group">
+												<div dnd-handle class="dnd-handle input-group-text">
+													:::
+												</div>
+												<div class="input-group-text" style="width: 7em">
+													Headline {{$index+1}}
+												</div>
+												<input
+													id="headline{{$index+1}}"
+													class="form-control input"
+													type="text"
+													ng-model="headline.text"
+												/>
+												<div
+													class="input-group-text alert-success"
+													ng-class="{'alert-danger': headline.text.length > adwordsLimits.headline }"
+												>
+													{{adwordsLimits.headline - headline.text.length}}
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-1" style="padding-left: 0px">
+											<button
+												ng-if="$last"
+												title="Add more headline(s)"
+												class="btn btn-default"
+												ng-click="addNewHeadline(ad)"
+											>
+												<i class="fa fa-plus"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Headings: End -->
+
+						<!-- Path: Start -->
+						<div class="input-group mb-3">
+							<div class="input-group-text" style="width: 7em">Path</div>
+							<div class="input-group-text" style="width: 7em">
+								{{getDomainName(ad)}}/
+							</div>
+							<input
+								id="path1"
+								class="form-control input"
+								ng-class="{'alert-danger': ad.path1.length > adwordsLimits.path}"
+								type="text"
+								ng-model="ad.path1"
+							/>
+							<div class="input-group-text">/</div>
+							<input
+								id="path2"
+								class="form-control input"
+								ng-class="{'alert-danger': ad.path2.length > adwordsLimits.path}"
+								type="text"
+								ng-model="ad.path2"
+							/>
+						</div>
+						<!-- Path: End -->
+
+						<!-- Description: Start -->
+						<div class="card mb-3">
+							<div class="card-body">
+								<h3 class="h5">Descriptions</h3>
+								<div dnd-list="ad.descriptions.descriptionArr">
+									<div
+										class="row"
+										ng-repeat="description in ad.descriptions.descriptionArr"
+										dnd-draggable="description"
+										dnd-effect-allowed="move"
+										dnd-moved="ad.descriptions.descriptionArr.splice($index, 1)"
+										style="margin-top: 5px"
+									>
+										<div dnd-nodrag class="col-xs-11">
+											<div class="input-group">
+												<div dnd-handle class="dnd-handle input-group-text">
+													:::
+												</div>
+												<div class="input-group-text" style="width: 7em">
+													Description {{$index+1}}
+												</div>
+												<textarea
+													id="description{{$index+1}}"
+													class="form-control input"
+													type="text"
+													ng-model="description.text"
+												></textarea>
+												<div
+													class="input-group-text alert-success"
+													ng-class="{'alert-danger': description.text.length > adwordsLimits.description }"
+												>
+													{{adwordsLimits.description -
+													description.text.length}}
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-1" style="padding-left: 0px">
+											<button
+												ng-if="$last"
+												title="Add more description(s)"
+												class="btn btn-default"
+												ng-click="addNewDescription(ad)"
+											>
+												<i class="fa fa-plus"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Description: End -->
+
+						<div class="card">
+							<div class="card-body">
+								<h3 class="h5">Extra Features</h3>
+								<div class="row">
+									<div class="col-xs-10">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="form-check" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															class="form-check-input"
+															ng-model="ad.features.showSitelinkExt"
+														/>Add Sitelink Extensions
+													</label>
+												</div>
+											</div>
+										</div>
+										<div
+											class="row"
+											style="margin-top: 5px"
+											ng-if="ad.features.showSitelinkExt"
+										>
+											<div class="col-xs-10 mb-3">
+												<div class="row">
+													<div class="col-xs-12">
+														<div class="form-check">
+															<label>
+																<input
+																	type="checkbox"
+																	class="form-check-input"
+																	ng-model="ad.features.showSitelinkDescription"
+																/>Add Sitelink Description
+															</label>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 5px">
+													<div class="col-xs-12">
+														<div class="row">
+															<div class="input-group col-xs-12">
+																<div
+																	class="input-group-text"
+																	style="width: 7em"
+																>
+																	Sitelink 1
+																</div>
+																<input
+																	id="sitelink1"
+																	class="form-control input"
+																	type="text"
+																	ng-model="ad.sitelink1"
+																/>
+																<div
+																	class="input-group-text alert-success"
+																	ng-class="{'alert-danger': ad.sitelink1.length > adwordsLimits.sitelink }"
+																>
+																	{{adwordsLimits.sitelink -
+																	ad.sitelink1.length}}
+																</div>
+															</div>
+														</div>
+														<div
+															class="row"
+															ng-if="ad.features.showSitelinkDescription"
+														>
+															<div class="col-xs-1"></div>
+															<div class="col-xs-11">
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 1
+																		</div>
+																		<input
+																			id="sl1desc1"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc1.line1"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc1.line1.length > adwordsLimits.sitelinkDescLine1}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine1 -
+																			ad.sitelinkDesc1.line1.length}}
+																		</div>
+																	</div>
+																</div>
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 2
+																		</div>
+																		<input
+																			id="sl1desc2"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc1.line2"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc1.line2.length > adwordsLimits.sitelinkDescLine2}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine2 -
+																			ad.sitelinkDesc1.line2.length}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 5px">
+													<div class="col-xs-12">
+														<div class="row">
+															<div class="input-group col-xs-12">
+																<div
+																	class="input-group-text"
+																	style="width: 7em"
+																>
+																	Sitelink 2
+																</div>
+																<input
+																	id="sitelink2"
+																	class="form-control input"
+																	type="text"
+																	ng-model="ad.sitelink2"
+																/>
+																<div
+																	class="input-group-text alert-success"
+																	ng-class="{'alert-danger': ad.sitelink2.length > adwordsLimits.sitelink }"
+																>
+																	{{adwordsLimits.sitelink -
+																	ad.sitelink2.length}}
+																</div>
+															</div>
+														</div>
+														<div
+															class="row"
+															ng-if="ad.features.showSitelinkDescription"
+														>
+															<div class="col-xs-1"></div>
+															<div class="col-xs-11">
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 1
+																		</div>
+																		<input
+																			id="sl2desc1"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc2.line1"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc2.line1.length > adwordsLimits.sitelinkDescLine1}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine1 -
+																			ad.sitelinkDesc2.line1.length}}
+																		</div>
+																	</div>
+																</div>
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 2
+																		</div>
+																		<input
+																			id="sl2desc2"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc2.line2"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc2.line2.length > adwordsLimits.sitelinkDescLine2}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine2 -
+																			ad.sitelinkDesc2.line2.length}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 5px">
+													<div class="col-xs-12">
+														<div class="row">
+															<div class="input-group col-xs-12">
+																<div
+																	class="input-group-text"
+																	style="width: 7em"
+																>
+																	Sitelink 3
+																</div>
+																<input
+																	id="sitelink3"
+																	class="form-control input"
+																	type="text"
+																	ng-model="ad.sitelink3"
+																/>
+																<div
+																	class="input-group-text alert-success"
+																	ng-class="{'alert-danger': ad.sitelink3.length > adwordsLimits.sitelink }"
+																>
+																	{{adwordsLimits.sitelink -
+																	ad.sitelink3.length}}
+																</div>
+															</div>
+														</div>
+														<div
+															class="row"
+															ng-if="ad.features.showSitelinkDescription"
+														>
+															<div class="col-xs-1"></div>
+															<div class="col-xs-11">
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 1
+																		</div>
+																		<input
+																			id="sl3desc1"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc3.line1"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc3.line1.length > adwordsLimits.sitelinkDescLine1}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine1 -
+																			ad.sitelinkDesc3.line1.length}}
+																		</div>
+																	</div>
+																</div>
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 2
+																		</div>
+																		<input
+																			id="sl3desc2"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc3.line2"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc3.line2.length > adwordsLimits.sitelinkDescLine2}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine2 -
+																			ad.sitelinkDesc3.line2.length}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="margin-top: 5px">
+													<div class="col-xs-12">
+														<div class="row">
+															<div class="input-group col-xs-12">
+																<div
+																	class="input-group-text"
+																	style="width: 7em"
+																>
+																	Sitelink 4
+																</div>
+																<input
+																	id="sitelink4"
+																	class="form-control input"
+																	type="text"
+																	ng-model="ad.sitelink4"
+																/>
+																<div
+																	class="input-group-text alert-success"
+																	ng-class="{'alert-danger': ad.sitelink4.length > adwordsLimits.sitelink }"
+																>
+																	{{adwordsLimits.sitelink -
+																	ad.sitelink4.length}}
+																</div>
+															</div>
+														</div>
+														<div
+															class="row"
+															ng-if="ad.features.showSitelinkDescription"
+														>
+															<div class="col-xs-1"></div>
+															<div class="col-xs-11">
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 1
+																		</div>
+																		<input
+																			id="sl4desc1"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc4.line1"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc4.line1.length > adwordsLimits.sitelinkDescLine1}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine1 -
+																			ad.sitelinkDesc4.line1.length}}
+																		</div>
+																	</div>
+																</div>
+																<div class="row" style="margin-top: 5px">
+																	<div class="input-group col-xs-12">
+																		<div
+																			class="input-group-text"
+																			style="width: 7em"
+																		>
+																			Description 2
+																		</div>
+																		<input
+																			id="sl4desc2"
+																			class="form-control input"
+																			type="text"
+																			ng-model="ad.sitelinkDesc4.line2"
+																		/>
+																		<div
+																			class="input-group-text alert-success"
+																			ng-class="{'alert-danger': ad.sitelinkDesc4.line2.length > adwordsLimits.sitelinkDescLine2}"
+																		>
+																			{{adwordsLimits.sitelinkDescLine2 -
+																			ad.sitelinkDesc4.line2.length}}
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="checkbox" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															ng-model="ad.features.showCalloutExt"
+														/>Add Callout Extensions
+													</label>
+												</div>
+											</div>
+										</div>
+										<div
+											class="row"
+											style="margin-top: 5px"
+											ng-if="ad.features.showCalloutExt"
+										>
+											<div class="col-xs-1"></div>
+											<div class="col-xs-10">
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Callout 1
+														</div>
+														<input
+															id="callout1"
+															class="form-control input"
+															type="text"
+															ng-model="ad.callout1"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.callout1.length > adwordsLimits.callout }"
+														>
+															{{adwordsLimits.callout - ad.callout1.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Callout 2
+														</div>
+														<input
+															id="callout2"
+															class="form-control input"
+															type="text"
+															ng-model="ad.callout2"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.callout2.length > adwordsLimits.callout }"
+														>
+															{{adwordsLimits.callout - ad.callout2.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Callout 3
+														</div>
+														<input
+															id="callout3"
+															class="form-control input"
+															type="text"
+															ng-model="ad.callout3"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.callout3.length > adwordsLimits.callout }"
+														>
+															{{adwordsLimits.callout - ad.callout3.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Callout 4
+														</div>
+														<input
+															id="callout4"
+															class="form-control input"
+															type="text"
+															ng-model="ad.callout4"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.callout4.length > adwordsLimits.callout }"
+														>
+															{{adwordsLimits.callout - ad.callout4.length}}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="checkbox" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															ng-model="ad.features.showCallExt"
+														/>Add Call Extension
+													</label>
+												</div>
+											</div>
+										</div>
+										<div
+											class="row"
+											style="margin-top: 5px"
+											ng-if="ad.features.showCallExt"
+										>
+											<div class="col-xs-1"></div>
+											<div class="col-xs-10">
+												<div class="row">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Phone Number
+														</div>
+														<input
+															id="phonenumber"
+															class="form-control input"
+															type="text"
+															ng-model="ad.phone"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.phone.length > adwordsLimits.phone }"
+														>
+															{{adwordsLimits.phone - ad.phone.length}}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="checkbox" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															ng-model="ad.features.showLocationExt"
+														/>Add Location Extensions
+													</label>
+												</div>
+											</div>
+										</div>
+										<div ng-if="ad.features.showLocationExt" class="row">
+											<div class="col-xs-1"></div>
+											<div class="col-xs-11">
+												<div
+													ng-repeat="address in getAddressesToEdit(ad)"
+													class="row"
+													style="margin-top: 5px"
+												>
+													<div class="col-xs-11">
+														<div class="row">
+															<div class="input-group col-xs-12">
+																<div
+																	class="input-group-text"
+																	style="width: 7em"
+																>
+																	Address
+																</div>
+																<input
+																	id="address"
+																	class="form-control input"
+																	type="text"
+																	ng-model="address.addressText"
+																/>
+															</div>
+														</div>
+													</div>
+													<div ng-if="$last" class="col-xs-1">
+														<button
+															title="Add more address(es)"
+															class="btn btn-default"
+															ng-click="addNewAddress(ad)"
+														>
+															<i class="fa fa-plus"></i>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="checkbox" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															ng-model="ad.features.showRating"
+														/>Show Advertiser Rating
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="checkbox" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															ng-model="ad.features.showStructuredSnippetsExt"
+														/>Add Structured Snippets Extension
+													</label>
+												</div>
+											</div>
+										</div>
+										<div
+											class="row"
+											style="margin-top: 5px"
+											ng-if="ad.features.showStructuredSnippetsExt"
+										>
+											<div class="col-xs-1"></div>
+											<div class="col-xs-10">
+												<div class="form-group row" style="margin: 0">
+													<strong
+														class="col-xs-2 control-label"
+														for="structuredSnippetHeader"
+														style="padding-left: 0; padding-right: 0"
+													>
+														Header
+													</strong>
+													<div
+														class="col-xs-10"
+														style="padding-left: 0; padding-right: 0"
+													>
+														<select
+															class="form-control"
+															ng-model="ad.structuredSnippetHeader"
+															id="structuredSnippetHeader"
+															ng-options="header.optionName for header in refData.availableStructuredSnippetHeaders"
+														>
+															<option value="">-- Choose Header --</option>
+														</select>
+													</div>
+												</div>
+												<!-- form-group -->
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Value 1
+														</div>
+														<input
+															id="ssValue1"
+															class="form-control input"
+															type="text"
+															ng-model="ad.ssValue1"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.ssValue1.length > adwordsLimits.ssValue}"
+														>
+															{{(adwordsLimits.ssValue)- ad.ssValue1.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Value 2
+														</div>
+														<input
+															id="ssValue2"
+															class="form-control input"
+															type="text"
+															ng-model="ad.ssValue2"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.ssValue2.length > adwordsLimits.ssValue}"
+														>
+															{{(adwordsLimits.ssValue)- ad.ssValue2.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 7em">
+															Value 3
+														</div>
+														<input
+															id="ssValue3"
+															class="form-control input"
+															type="text"
+															ng-model="ad.ssValue3"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': ad.ssValue3.length > adwordsLimits.ssValue}"
+														>
+															{{(adwordsLimits.ssValue)- ad.ssValue3.length}}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="checkbox" style="margin-bottom: 0px">
+													<label>
+														<input
+															type="checkbox"
+															ng-model="ad.features.showPriceExt"
+														/>Add Price Extension
+													</label>
+												</div>
+											</div>
+										</div>
+										<div
+											class="row"
+											style="margin-top: 5px"
+											ng-if="ad.features.showPriceExt"
+										>
+											<div class="col-xs-1"></div>
+											<div class="col-xs-10">
+												<div class="form-group row" style="margin: 0">
+													<strong
+														class="col-xs-3 control-label"
+														for="priceExtCurrency"
+														style="padding-left: 0; padding-right: 0"
+													>
+														Currency
+													</strong>
+													<div
+														class="col-xs-9"
+														style="padding-left: 0; padding-right: 0"
+													>
+														<select
+															class="form-control"
+															ng-model="ad.priceExt.currency"
+															id="priceExtCurrency"
+															ng-options="currency.code for currency in refData.availableCurrencies"
+														></select>
+													</div>
+												</div>
+												<div class="form-group row" style="margin: 0">
+													<strong
+														class="col-xs-3 control-label"
+														for="priceExtPriceQualifier"
+														style="padding-left: 0; padding-right: 0"
+													>
+														Price Qualifier
+													</strong>
+													<div
+														class="col-xs-9"
+														style="padding-left: 0; padding-right: 0"
+													>
+														<select
+															class="form-control"
+															ng-model="ad.priceExt.priceQualifier"
+															id="priceExtPriceQualifier"
+															ng-options="priceQualifier.name for priceQualifier in refData.availablePriceQualifiers"
+														>
+															<option value="">No qualifier</option>
+														</select>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 5em">
+															Item 1
+														</div>
+														<input
+															id="priceExtItem1Header"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item1.header"
+														/>
+														<input
+															id="priceExtItem1Price"
+															class="form-control input"
+															type="number"
+															ng-model="ad.priceExt.item1.price"
+														/>
+														<input
+															id="priceExtItem1Decription"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item1.description"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': (ad.priceExt.item1.header.length > adwordsLimits.priceExtTxt || ad.priceExt.item1.description.length > adwordsLimits.priceExtTxt)}"
+														>
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item1.header.length}} <br />
+															-- <br />
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item1.description.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 5em">
+															Item 2
+														</div>
+														<input
+															id="priceExtItem2Header"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item2.header"
+														/>
+														<input
+															id="priceExtItem2Price"
+															class="form-control input"
+															type="number"
+															ng-model="ad.priceExt.item2.price"
+														/>
+														<input
+															id="priceExtItem2Decription"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item2.description"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': (ad.priceExt.item2.header.length > adwordsLimits.priceExtTxt || ad.priceExt.item2.description.length > adwordsLimits.priceExtTxt)}"
+														>
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item2.header.length}} <br />
+															-- <br />
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item2.description.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 5em">
+															Item 3
+														</div>
+														<input
+															id="priceExtItem3Header"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item3.header"
+														/>
+														<input
+															id="priceExtItem3Price"
+															class="form-control input"
+															type="number"
+															ng-model="ad.priceExt.item3.price"
+														/>
+														<input
+															id="priceExtItem3Decription"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item3.description"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': (ad.priceExt.item3.header.length > adwordsLimits.priceExtTxt || ad.priceExt.item3.description.length > adwordsLimits.priceExtTxt)}"
+														>
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item3.header.length}} <br />
+															-- <br />
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item3.description.length}}
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 5px">
+													<div class="input-group col-xs-12">
+														<div class="input-group-text" style="width: 5em">
+															Item 4
+														</div>
+														<input
+															id="priceExtItem4Header"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item4.header"
+														/>
+														<input
+															id="priceExtItem4Price"
+															class="form-control input"
+															type="number"
+															ng-model="ad.priceExt.item4.price"
+														/>
+														<input
+															id="priceExtItem4Decription"
+															class="form-control input"
+															type="text"
+															ng-model="ad.priceExt.item4.description"
+														/>
+														<div
+															class="input-group-text alert-success"
+															ng-class="{'alert-danger': (ad.priceExt.item4.header.length > adwordsLimits.priceExtTxt || ad.priceExt.item4.description.length > adwordsLimits.priceExtTxt)}"
+														>
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item4.header.length}} <br />
+															-- <br />
+															{{(adwordsLimits.priceExtTxt)-
+															ad.priceExt.item4.description.length}}
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row" style="margin-top: 25px">
+											<div class="col-xs-2">
+												<button
+													type="button"
+													class="btn btn-warning pull-left"
+													ng-click="clearAd()"
+												>
+													&nbsp;Reset&nbsp;
+												</button>
+											</div>
+											<div class="col-xs-10">
+												<button
+													type="button"
+													class="btn btn-success pull-left"
+													ng-click="saveAdCreative(ad)"
+												>
+													&nbsp;Share This Ad&nbsp;
+												</button>
+											</div>
+										</div>
+										<div class="row" ng-if="urlToShare">
+											<div
+												class="col-xs-12 alert-success"
+												style="margin-top: 15px; padding: 10px 20px 20px 20px"
+											>
+												<div class="row">
+													<div class="col-xs-12">
+														<h4>Copy and share the following URL:</h4>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12" style="color: black">
+														<a
+															href="/responsive-search-ad-preview-tool?id={{urlToShare}}"
+															target="_blank"
+															>http://www.karooya.com/responsive-search-ad-preview-tool?id={{urlToShare}}</a
+														>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row" ng-if="errorSavingAd">
+											<div
+												class="col-xs-12 alert-warning"
+												style="margin-top: 15px; padding: 10px 20px 20px 20px"
+											>
+												{{errorSavingAd}}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+						<div class="row">
+							<div class="col-xs-1"></div>
+							<div class="col-xs-10">
+								<div class="row desktop">
+									<!-- desktop ad -->
+									<div class="col-sm-12 ad">
+										<div
+											class="urlline"
+											style="overflow: hidden; text-overflow: ellipsis"
+											ng-if="getCompleteDisplayURL(ad)"
+										>
+											<strong class="adtag">Ad&nbsp;&#xb7;</strong>&nbsp;<span
+												class="displayurl"
+												>{{getCompleteDisplayURL(ad)}}&nbsp;<span
+													class="fa fa-caret-down"
+												></span
+											></span>
+											<span
+												ng-if="ad.features.showCallExt && ad.phone"
+												class="desktop-call-ext"
+												>&nbsp;{{ad.phone}}</span
+											>
+										</div>
+										<h3 class="headline">
+											<a href="{{getCleanFinalUrl(ad)}}" rel="nofollow">
+												<span ng-repeat="headline in getHeadlinesToDisplay(ad)">
+													<span ng-if="!$first">|</span>
+													{{headline.text}}
+												</span>
+											</a>
+										</h3>
+										<div ng-if="ad.features.showRating" class="adv-rating">
+											<span>4</span>
+											<span
+												><i class="glyphicon glyphicon-star orange-star"></i
+												><i class="glyphicon glyphicon-star orange-star"></i
+												><i class="glyphicon glyphicon-star orange-star"></i
+												><i class="glyphicon glyphicon-star orange-star"></i
+												><i class="glyphicon glyphicon-star gray-star"></i
+											></span>
+											<span>advertiser rating</span>
+										</div>
+										<div>
+											<span
+												ng-repeat=" description in getDescriptionsToDisplay(ad)"
+												class="description"
+											>
+												<span ng-if="!$first"> </span>{{description.text}}
+											</span>
+										</div>
+										<div
+											ng-if="ad.features.showCalloutExt && getCalloutLine(ad)"
+											class="callout-line"
+										>
+											{{getCalloutLine(ad)}}
+										</div>
+										<div
+											ng-if="ad.features.showStructuredSnippetsExt && getStructuredSnippetLine(ad)"
+										>
+											<span class="structured-snippet-ext-line"
+												>{{getStructuredSnippetLine(ad)}}</span
+											>
+										</div>
+										<div
+											class="row"
+											ng-if="ad.features.showSitelinkExt && hasSitelinks(ad)"
+										>
+											<div class="col-xs-12">
+												<div
+													class="row sitelink sldesk"
+													ng-class="{'sitelink-large':ad.features.showSitelinkDescription}"
+												>
+													<div
+														class="col-xs-12"
+														style="padding-left: 7%; padding-right: 7%"
+													>
+														<div class="row">
+															<div class="col-xs-6">
+																<div class="row">
+																	<div class="col-xs-12 nowrap-nooverflow-div">
+																		<a href="#">{{getSitelink(ad, 1)}}</a>
+																	</div>
+																</div>
+																<div
+																	class="row"
+																	ng-if="ad.features.showSitelinkDescription"
+																>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc1 && ad.sitelinkDesc1.line1"
+																	>
+																		<span>{{ad.sitelinkDesc1.line1}}</span>
+																	</div>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc1 && ad.sitelinkDesc1.line1"
+																	>
+																		<span>{{ad.sitelinkDesc1.line2}}</span>
+																	</div>
+																</div>
+															</div>
+															<div class="col-xs-6 nowrap-nooverflow-div">
+																<div class="row">
+																	<div class="col-xs-12 nowrap-nooverflow-div">
+																		<a href="#">{{getSitelink(ad, 2)}}</a>
+																	</div>
+																</div>
+																<div
+																	class="row"
+																	ng-if="ad.features.showSitelinkDescription"
+																>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc2 && ad.sitelinkDesc2.line1"
+																	>
+																		<span>{{ad.sitelinkDesc2.line1}}</span>
+																	</div>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc2 && ad.sitelinkDesc2.line1"
+																	>
+																		<span>{{ad.sitelinkDesc2.line2}}</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row sldesk-second-row" style="">
+															<div class="col-xs-6 nowrap-nooverflow-div">
+																<div class="row">
+																	<div class="col-xs-12 nowrap-nooverflow-div">
+																		<a href="#">{{getSitelink(ad, 3)}}</a>
+																	</div>
+																</div>
+																<div
+																	class="row"
+																	ng-if="ad.features.showSitelinkDescription"
+																>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc3 && ad.sitelinkDesc3.line1"
+																	>
+																		<span>{{ad.sitelinkDesc3.line1}}</span>
+																	</div>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc3 && ad.sitelinkDesc3.line1"
+																	>
+																		<span>{{ad.sitelinkDesc3.line2}}</span>
+																	</div>
+																</div>
+															</div>
+															<div class="col-xs-6 nowrap-nooverflow-div">
+																<div class="row">
+																	<div class="col-xs-12 nowrap-nooverflow-div">
+																		<a href="#">{{getSitelink(ad, 4)}}</a>
+																	</div>
+																</div>
+																<div
+																	class="row"
+																	ng-if="ad.features.showSitelinkDescription"
+																>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc4 && ad.sitelinkDesc4.line1"
+																	>
+																		<span>{{ad.sitelinkDesc4.line1}}</span>
+																	</div>
+																	<div
+																		class="col-xs-12 nowrap-nooverflow-div"
+																		ng-if="ad.sitelinkDesc4 && ad.sitelinkDesc4.line1"
+																	>
+																		<span>{{ad.sitelinkDesc4.line2}}</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div
+											ng-if="ad.features.showLocationExt && hasNonEmptyAddresses(ad)"
+											class="location-ext deskktop"
+										>
+											<i
+												style="padding: 0px 5px 0px 5px"
+												class="fa fa-map-marker"
+											></i>
+											<a href="#"
+												>{{getFirstNonEmptyAddress(ad).addressText}}</a
+											>
+										</div>
+										<div
+											ng-if="ad.features.showPriceExt && hasPriceExtItems(ad)"
+											class="price-ext-container desktop"
+										>
+											<div
+												ng-repeat="pitem in getPriceExtItemsArr(ad)"
+												class="price-ext-item deskktop"
+											>
+												<div class="price-ext-item-header deskktop">
+													{{pitem.header}}
+												</div>
+												<div class="price-ext-item-price deskktop">
+													<span ng-if="ad.priceExt.priceQualifier"
+														>{{ad.priceExt.priceQualifier.displayStr}}</span
+													>
+													<strong
+														ng-bind-html="pitem.price|currency:ad.priceExt.currency.symbol"
+													></strong>
+												</div>
+												<div class="price-ext-item-description deskktop">
+													{{pitem.description}}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /.row desktopad -->
+
+								<div class="row" style="margin-top: 20px">
+									<!-- mobile -->
+									<div class="col-sm-12">
+										<div
+											class="mobile-preview-frame"
+											style="background-color: #efefef"
+										>
+											<div
+												class="row"
+												style="margin-top: 5px; margin-bottom: 10px"
+											>
+												<div
+													class="col-sm-12 text-center"
+													style="font-size: 20px"
+												>
+													<span style="color: blue">G</span
+													><span style="color: red">o</span
+													><span style="color: orange">o</span
+													><span style="color: blue">g</span
+													><span style="color: green">l</span
+													><span style="color: red">e</span>
+												</div>
+											</div>
+											<div class="row" style="margin-top: 5px; padding: 2px">
+												<div class="col-sm-12 mobile-cards">
+													<div class="inner-text left-text right-text">
+														<input
+															id="mobile-search-input"
+															class="form-control input"
+															type="text"
+														/>
+														<i
+															class="k-icon-left k-icon glyphicon glyphicon-search"
+														></i>
+														<i
+															class="k-icon-right k-icon fa fa-microphone"
+															style="font-size: large; color: blue"
+														></i>
+													</div>
+													<div
+														class=""
+														style="color: #545454; padding: 5px 10px"
+													>
+														<span style="color: #1a0dab">ALL</span>
+														<span style="margin-left: 15px">MAPS</span>
+														<span style="margin-left: 15px">IMAGES</span>
+														<span style="margin-left: 15px">VIDEOS</span>
+													</div>
+												</div>
+											</div>
+											<div class="row" style="padding: 2px">
+												<div
+													class="col-sm-12 ad mobile-cards"
+													style="background-color: white"
+												>
+													<div style="padding-left: 10px; padding-right: 10px">
+														<div class="urlline-mobile">
+															<div class="row">
+																<div
+																	class="col-xs-10"
+																	style="
+																		overflow: hidden;
+																		text-overflow: ellipsis;
+																	"
+																	ng-if="getCompleteDisplayURL(ad)"
+																>
+																	<strong class="adtag-mobile"
+																		>Sponsored&nbsp;&#xb7;</strong
+																	>&nbsp;<span class="displayurl-mobile"
+																		>{{getCompleteDisplayURL(ad)}}</span
+																	>
+																</div>
+																<div class="col-xs-2">
+																	<i
+																		style="color: bbb; padding: 0px 5px 0px 5px"
+																		class="fa fa-info-circle"
+																	></i>
+																</div>
+															</div>
+														</div>
+														<div>
+															<h3 class="headline">
+																<a
+																	href="{{getCleanFinalUrl(ad)}}"
+																	rel="nofollow"
+																>
+																	<span
+																		ng-repeat="headline in getHeadlinesToDisplay(ad)"
+																	>
+																		<span ng-if="!$first">|</span>
+																		{{headline.text}}
+																	</span>
+																</a>
+															</h3>
+														</div>
+														<div
+															ng-if="ad.features.showRating"
+															class="adv-rating"
+														>
+															<span>4</span>
+															<span
+																><i
+																	class="glyphicon glyphicon-star orange-star"
+																></i
+																><i
+																	class="glyphicon glyphicon-star orange-star"
+																></i
+																><i
+																	class="glyphicon glyphicon-star orange-star"
+																></i
+																><i
+																	class="glyphicon glyphicon-star orange-star"
+																></i
+																><i
+																	class="glyphicon glyphicon-star gray-star"
+																></i
+															></span>
+															<span>advertiser rating</span>
+														</div>
+														<div>
+															<span
+																ng-repeat=" description in getDescriptionsToDisplay(ad)"
+																class="description"
+															>
+																{{description.text}}
+															</span>
+														</div>
+														<div
+															ng-if="ad.features.showCalloutExt && getCalloutLine(ad)"
+															class="callout-line"
+														>
+															{{getCalloutLine(ad)}}
+														</div>
+														<div
+															ng-if=" ad.features.showStructuredSnippetsExt && getStructuredSnippetLine(ad)"
+														>
+															<span class="structured-snippet-ext-line"
+																>{{getStructuredSnippetLine(ad)}}</span
+															>
+														</div>
+														<!--
+                        <div ng-if="ad.features.showReviewExt && getReviewExtLength(ad) > 0" class="review-ext" ng-class="{'review-ext-type-exact-quote':ad.reviewExtFormat==='ExactQuote'}">
+                          <span ng-if="ad.reviewText" class="review-ext-text">{{ad.reviewText}}</span><span ng-if="ad.reviewText && ad.reviewSource"> &ndash; </span><span ng-if="ad.reviewSource" class="review-ext-source">{{ad.reviewSource}}</span>
+                        </div>
+                        -->
+														<div
+															ng-if="ad.features.showSitelinkExt && hasSitelinks(ad)"
+															class="sitelink-ext-container-mobile mobile"
+														>
+															<div
+																class="sitelink-ext-item"
+																ng-if="hasSitelink(ad, 1)"
+															>
+																<a href="#">{{getSitelink(ad, 1)}}</a>
+															</div>
+															<div
+																class="sitelink-ext-item"
+																ng-if="hasSitelink(ad, 2)"
+															>
+																<a href="#">{{getSitelink(ad, 2)}}</a>
+															</div>
+															<div
+																class="sitelink-ext-item"
+																ng-if="hasSitelink(ad, 3)"
+															>
+																<a href="#">{{getSitelink(ad, 3)}}</a>
+															</div>
+															<div
+																class="sitelink-ext-item"
+																ng-if="hasSitelink(ad, 4)"
+															>
+																<a href="#">{{getSitelink(ad, 4)}}</a>
+															</div>
+														</div>
+														<div
+															ng-if="ad.features.showPriceExt && hasPriceExtItems(ad)"
+															class="price-ext-container mobile"
+														>
+															<div
+																ng-repeat="pitem in getPriceExtItemsArr(ad)"
+																class="price-ext-item"
+															>
+																<div class="price-ext-item-header">
+																	{{pitem.header}}
+																</div>
+																<div class="price-ext-item-price">
+																	<span ng-if="ad.priceExt.priceQualifier"
+																		>{{ad.priceExt.priceQualifier.displayStr}}</span
+																	>
+																	<strong
+																		ng-bind-html="pitem.price|currency:ad.priceExt.currency.symbol"
+																	></strong>
+																</div>
+																<div class="price-ext-item-description">
+																	{{pitem.description}}
+																</div>
+															</div>
+														</div>
+														<div
+															ng-if="ad.features.showCallExt && ad.phone && !(ad.features.showLocationExt && hasNonEmptyAddresses(ad))"
+														>
+															<hr
+																style="
+																	margin-bottom: 7px;
+																	margin-top: 7px;
+																	margin-left: -10px;
+																	margin-right: -10px;
+																"
+															/>
+															<i
+																style="
+																	font-size: large;
+																	padding: 0px 5px 0px 5px;
+																"
+																class="fa fa-phone"
+															></i>
+															<span class="mobile-call-ext"
+																>Call {{ad.phone}}</span
+															>
+
+															<!-- <div class="row">
+                            <div class="col-xs-6">
+                              <i style="font-size: large; padding:0px 5px 0px 5px;" class="fa fa-phone"></i> <span class="mobile-call-ext">Call</span>
+                            </div>
+                            <div class="col-xs-6" style="border-left: 1px solid #cccccc;">
+                              <div class="pull-left" style="width: 20px; margin-right: 8px;">
+                                <img src="/images/missed-call-icon-black.png" class="img-responsive">
+                              </div>
+                              <span class="mobile-call-ext">Missed Call</span>
+                            </div>
+                          </div> -->
+														</div>
+														<!-- 
+                        <div ng-if="ad.features.showMessageExt && ad.messageExtText">
+                          <hr style=" margin-bottom: 7px; margin-top: 7px; margin-left:-10px; margin-right:-10px;"/>
+                          <i style="font-size: large; padding:0px 5px 0px 5px;" class="fa fa-comment-o"></i> <span class="mobile-call-ext">{{ad.messageExtText}}</span>
+                        </div>
+ -->
+														<div
+															ng-if="ad.features.showLocationExt && hasNonEmptyAddresses(ad)"
+														>
+															<div
+																ng-repeat="address in getNonEmptyAddresses(ad)"
+															>
+																<hr
+																	style="
+																		margin-bottom: 7px;
+																		margin-top: 7px;
+																		margin-left: -10px;
+																		margin-right: -10px;
+																	"
+																/>
+																<table>
+																	<tbody>
+																		<tr>
+																			<td>
+																				<i
+																					style="
+																						font-size: large;
+																						padding: 0px 5px 0px 5px;
+																					"
+																					class="fa fa-map-marker"
+																				></i>
+																			</td>
+																			<td style="text-align: left">
+																				<div
+																					style="width: 300px"
+																					class="location-ext"
+																				>
+																					<span>{{address.addressText}}</span>
+																				</div>
+																			</td>
+																			<td
+																				style="
+																					text-align: right;
+																					border-left: 1px solid #cccccc;
+																				"
+																			>
+																				<i
+																					style="
+																						font-size: large;
+																						padding: 0px 5px 0px 15px;
+																					"
+																					class="fa fa-phone"
+																				></i>
+																			</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<script type="text/javascript" src="/src/angular.min.js"></script>
+		<script type="text/javascript" src="/src/angular-animate.min.js"></script>
+		<script type="text/javascript" src="/src/angular-sanitize.min.js"></script>
+		<script type="text/javascript" src="/src/angular-route.min.js"></script>
+		<script
+			type="text/javascript"
+			src="/src/ui-bootstrap-tpls-0.12.0.min.js"
+		></script>
+		<script src="/src/angular-drag-and-drop-lists.min.js"></script>
+
+		<script src="/src/main.js"></script>
+	</body>
+</html>
