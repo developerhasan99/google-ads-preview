@@ -82,7 +82,7 @@
 .mobile-preview-frame {
 	border: rgb(19, 19, 19) solid;
 	border-width: 70px 20px;
-	border-radius: 50%/6%;
+	border-radius: 16%/6%;
 	height: 840px;
 	margin: 20px;
 	overflow: hidden;

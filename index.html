@@ -7,7 +7,13 @@
 		<title>Responsive Search Ad Preview Tool</title>
 
 		<link rel="shortcut icon" type="image/x-icon" href="/vite.svg" />
-
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+			integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
 		<!-- Bootstrap core CSS -->
 		<link
 			rel="stylesheet"
@@ -74,14 +80,29 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-xs-1" style="padding-left: 0px">
+										<div class="col-xs-1">
 											<button
 												ng-if="$last"
 												title="Add more headline(s)"
 												class="btn btn-default"
 												ng-click="addNewHeadline(ad)"
+												style="
+													display: block;
+													width: 100%;
+													background-color: #eee;
+													margin-top: 10px;
+												"
 											>
-												<i class="fa fa-plus"></i>
+												<svg
+													height="24"
+													width="24"
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 448 512"
+												>
+													<path
+														d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+													/>
+												</svg>
 											</button>
 										</div>
 									</div>
@@ -148,14 +169,29 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-xs-1" style="padding-left: 0px">
+										<div class="col-xs-1">
 											<button
 												ng-if="$last"
 												title="Add more description(s)"
 												class="btn btn-default"
 												ng-click="addNewDescription(ad)"
+												style="
+													display: block;
+													width: 100%;
+													background-color: #eee;
+													margin-top: 10px;
+												"
 											>
-												<i class="fa fa-plus"></i>
+												<svg
+													height="24"
+													width="24"
+													xmlns="http://www.w3.org/2000/svg"
+													viewBox="0 0 448 512"
+												>
+													<path
+														d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+													/>
+												</svg>
 											</button>
 										</div>
 									</div>
@@ -1112,109 +1148,121 @@
 										>
 											<div class="col-xs-12">
 												<div
-													class="row sitelink sldesk"
+													class="sitelink sldesk"
 													ng-class="{'sitelink-large':ad.features.showSitelinkDescription}"
 												>
 													<div
-														class="col-xs-12"
+														class="row"
 														style="padding-left: 7%; padding-right: 7%"
 													>
-														<div class="row">
-															<div class="col-xs-6">
-																<div class="row">
-																	<div class="col-xs-12 nowrap-nooverflow-div">
-																		<a href="#">{{getSitelink(ad, 1)}}</a>
+														<div class="col-6">
+															<div class="row">
+																<div class="col-xs-6">
+																	<div class="row">
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																		>
+																			<a href="#">{{getSitelink(ad, 1)}}</a>
+																		</div>
+																	</div>
+																	<div
+																		class="row"
+																		ng-if="ad.features.showSitelinkDescription"
+																	>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc1 && ad.sitelinkDesc1.line1"
+																		>
+																			<span>{{ad.sitelinkDesc1.line1}}</span>
+																		</div>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc1 && ad.sitelinkDesc1.line1"
+																		>
+																			<span>{{ad.sitelinkDesc1.line2}}</span>
+																		</div>
 																	</div>
 																</div>
-																<div
-																	class="row"
-																	ng-if="ad.features.showSitelinkDescription"
-																>
-																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc1 && ad.sitelinkDesc1.line1"
-																	>
-																		<span>{{ad.sitelinkDesc1.line1}}</span>
+																<div class="col-xs-6 nowrap-nooverflow-div">
+																	<div class="row">
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																		>
+																			<a href="#">{{getSitelink(ad, 2)}}</a>
+																		</div>
 																	</div>
 																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc1 && ad.sitelinkDesc1.line1"
+																		class="row"
+																		ng-if="ad.features.showSitelinkDescription"
 																	>
-																		<span>{{ad.sitelinkDesc1.line2}}</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-xs-6 nowrap-nooverflow-div">
-																<div class="row">
-																	<div class="col-xs-12 nowrap-nooverflow-div">
-																		<a href="#">{{getSitelink(ad, 2)}}</a>
-																	</div>
-																</div>
-																<div
-																	class="row"
-																	ng-if="ad.features.showSitelinkDescription"
-																>
-																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc2 && ad.sitelinkDesc2.line1"
-																	>
-																		<span>{{ad.sitelinkDesc2.line1}}</span>
-																	</div>
-																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc2 && ad.sitelinkDesc2.line1"
-																	>
-																		<span>{{ad.sitelinkDesc2.line2}}</span>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc2 && ad.sitelinkDesc2.line1"
+																		>
+																			<span>{{ad.sitelinkDesc2.line1}}</span>
+																		</div>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc2 && ad.sitelinkDesc2.line1"
+																		>
+																			<span>{{ad.sitelinkDesc2.line2}}</span>
+																		</div>
 																	</div>
 																</div>
 															</div>
 														</div>
-														<div class="row sldesk-second-row" style="">
-															<div class="col-xs-6 nowrap-nooverflow-div">
-																<div class="row">
-																	<div class="col-xs-12 nowrap-nooverflow-div">
-																		<a href="#">{{getSitelink(ad, 3)}}</a>
+														<div class="col-6">
+															<div class="row sldesk-second-row" style="">
+																<div class="col-xs-6 nowrap-nooverflow-div">
+																	<div class="row">
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																		>
+																			<a href="#">{{getSitelink(ad, 3)}}</a>
+																		</div>
+																	</div>
+																	<div
+																		class="row"
+																		ng-if="ad.features.showSitelinkDescription"
+																	>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc3 && ad.sitelinkDesc3.line1"
+																		>
+																			<span>{{ad.sitelinkDesc3.line1}}</span>
+																		</div>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc3 && ad.sitelinkDesc3.line1"
+																		>
+																			<span>{{ad.sitelinkDesc3.line2}}</span>
+																		</div>
 																	</div>
 																</div>
-																<div
-																	class="row"
-																	ng-if="ad.features.showSitelinkDescription"
-																>
-																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc3 && ad.sitelinkDesc3.line1"
-																	>
-																		<span>{{ad.sitelinkDesc3.line1}}</span>
+																<div class="col-xs-6 nowrap-nooverflow-div">
+																	<div class="row">
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																		>
+																			<a href="#">{{getSitelink(ad, 4)}}</a>
+																		</div>
 																	</div>
 																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc3 && ad.sitelinkDesc3.line1"
+																		class="row"
+																		ng-if="ad.features.showSitelinkDescription"
 																	>
-																		<span>{{ad.sitelinkDesc3.line2}}</span>
-																	</div>
-																</div>
-															</div>
-															<div class="col-xs-6 nowrap-nooverflow-div">
-																<div class="row">
-																	<div class="col-xs-12 nowrap-nooverflow-div">
-																		<a href="#">{{getSitelink(ad, 4)}}</a>
-																	</div>
-																</div>
-																<div
-																	class="row"
-																	ng-if="ad.features.showSitelinkDescription"
-																>
-																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc4 && ad.sitelinkDesc4.line1"
-																	>
-																		<span>{{ad.sitelinkDesc4.line1}}</span>
-																	</div>
-																	<div
-																		class="col-xs-12 nowrap-nooverflow-div"
-																		ng-if="ad.sitelinkDesc4 && ad.sitelinkDesc4.line1"
-																	>
-																		<span>{{ad.sitelinkDesc4.line2}}</span>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc4 && ad.sitelinkDesc4.line1"
+																		>
+																			<span>{{ad.sitelinkDesc4.line1}}</span>
+																		</div>
+																		<div
+																			class="col-xs-12 nowrap-nooverflow-div"
+																			ng-if="ad.sitelinkDesc4 && ad.sitelinkDesc4.line1"
+																		>
+																			<span>{{ad.sitelinkDesc4.line2}}</span>
+																		</div>
 																	</div>
 																</div>
 															</div>
@@ -1288,16 +1336,21 @@
 											</div>
 											<div class="row" style="margin-top: 5px; padding: 2px">
 												<div class="col-sm-12 mobile-cards">
-													<div class="inner-text left-text right-text">
+													<div
+														class="inner-text left-text right-text"
+														style="position: relative"
+													>
 														<input
 															id="mobile-search-input"
 															class="form-control input"
 															type="text"
 														/>
 														<i
-															class="k-icon-left k-icon glyphicon glyphicon-search"
+															style="position: absolute; top: 10px; left: 10px"
+															class="fa fa-search"
 														></i>
 														<i
+															style="position: absolute; top: 10px; right: 10px"
 															class="k-icon-right k-icon fa fa-microphone"
 															style="font-size: large; color: blue"
 														></i>
@@ -1335,12 +1388,6 @@
 																		>{{getCompleteDisplayURL(ad)}}</span
 																	>
 																</div>
-																<!-- <div class="col-xs-2">
-																	<i
-																		style="color: bbb; padding: 0px 5px 0px 5px"
-																		class="fa fa-info-circle"
-																	></i>
-																</div> -->
 															</div>
 														</div>
 														<div>
@@ -1364,21 +1411,11 @@
 														>
 															<span>4</span>
 															<span
-																><i
-																	class="glyphicon glyphicon-star orange-star"
-																></i
-																><i
-																	class="glyphicon glyphicon-star orange-star"
-																></i
-																><i
-																	class="glyphicon glyphicon-star orange-star"
-																></i
-																><i
-																	class="glyphicon glyphicon-star orange-star"
-																></i
-																><i
-																	class="glyphicon glyphicon-star gray-star"
-																></i
+																><i class="fa fa-star orange-star"></i
+																><i class="fa fa-star orange-star"></i
+																><i class="fa fa-star orange-star"></i
+																><i class="fa fa-star orange-star"></i
+																><i class="fa fa-star gray-star"></i
 															></span>
 															<span>advertiser rating</span>
 														</div>
